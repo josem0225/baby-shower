@@ -6,11 +6,9 @@ import { JWT } from 'google-auth-library';
 // Esta función se ejecuta de forma segura en el servidor de Next.js
 export async function verifyGuest(phoneNumber: string) {
   try {
-    const {
-      GOOGLE_CLIENT_EMAIL,
-      GOOGLE_PRIVATE_KEY,
-      SPREADSHEET_ID,
-    } = process.env;
+    const GOOGLE_CLIENT_EMAIL = (process.env.GOOGLE_CLIENT_EMAIL || '').replace(/^"|"$/g, '');
+    const GOOGLE_PRIVATE_KEY = (process.env.GOOGLE_PRIVATE_KEY || '').replace(/^"|"$/g, '');
+    const SPREADSHEET_ID = (process.env.SPREADSHEET_ID || '').replace(/^"|"$/g, '');
 
     if (!GOOGLE_CLIENT_EMAIL || !GOOGLE_PRIVATE_KEY || !SPREADSHEET_ID) {
       console.error("Faltan variables de entorno para GCP.");
@@ -31,7 +29,12 @@ export async function verifyGuest(phoneNumber: string) {
     
     // Cargar la información del documento
     await doc.loadInfo();
-    const sheet = doc.sheetsByIndex[0]; // Usamos la primera hoja por defecto
+    
+    // Buscar la hoja de invitados por nombre, sin importar mayúsculas/minúsculas
+    let sheet = Object.values(doc.sheetsById).find(s => s.title.toLowerCase().includes('invitad'));
+    if (!sheet) {
+      sheet = doc.sheetsByIndex[0]; // Fallback a la primera hoja
+    }
 
     // Cargar las filas
     const rows = await sheet.getRows();
@@ -43,16 +46,13 @@ export async function verifyGuest(phoneNumber: string) {
     let foundGuest = null;
 
     for (const row of rows) {
-      // row.toObject() nos da todos los valores de la fila
-      const rowData = row.toObject();
+      const rowData = (row as unknown as { _rawData: string[] })._rawData || [];
       
-      // Revisamos todas las celdas de esta fila
-      for (const key in rowData) {
-        const cellValue = String(rowData[key]).replace(/\D/g, ''); // Limpiar el valor de la celda
+      for (const cell of rowData) {
+        const cellValue = String(cell).replace(/\D/g, ''); 
         
-        // Si el valor limpiado incluye o es exactamente el teléfono ingresado
         if (cellValue.length >= 7 && cellValue.includes(cleanInputPhone)) {
-          foundGuest = rowData;
+          foundGuest = row;
           break;
         }
       }
@@ -60,15 +60,17 @@ export async function verifyGuest(phoneNumber: string) {
     }
 
     if (foundGuest) {
-      // Por defecto, buscar la columna 'nombre'
-      let nameKey = Object.keys(foundGuest).find(k => k.toLowerCase().includes('nombre') || k.toLowerCase().includes('invitado'));
+      const rawValues = (foundGuest as unknown as { _rawData: string[] })._rawData || [];
+      let guestName = 'Invitado Especial';
       
-      // Si no encuentra la columna por nombre, simplemente toma la segunda columna (que es la Columna B)
-      if (!nameKey && Object.keys(foundGuest).length >= 2) {
-        nameKey = Object.keys(foundGuest)[1]; // [0] es la A, [1] es la B
+      // El nombre normalmente está en la Columna B (índice 1)
+      if (rawValues.length >= 2 && String(rawValues[1]).trim() !== '') {
+        guestName = String(rawValues[1]).trim();
+      } else {
+        // Fallback: la primera columna que tenga texto con letras
+        const textCol = rawValues.find((v: string) => /[A-Za-z]/.test(v));
+        if (textCol) guestName = textCol.trim();
       }
-
-      const guestName = nameKey ? foundGuest[nameKey] : 'Invitado Especial';
 
       return { success: true, guestName };
     } else {

@@ -26,7 +26,7 @@ export function EventDetails() {
               <CalendarHeart size={24} strokeWidth={1.5} />
             </div>
             <h3 className="font-serif text-xl text-cloud-800 mb-2">Fecha</h3>
-            <p className="font-sans text-silver-500">Sábado, 28 de Agosto</p>
+            <p className="font-sans text-silver-500">Sábado, 26 de Septiembre</p>
             <p className="font-sans text-silver-500 text-sm mt-1">2026</p>
           </GlassCard>
 
@@ -35,7 +35,7 @@ export function EventDetails() {
               <Clock size={24} strokeWidth={1.5} />
             </div>
             <h3 className="font-serif text-xl text-cloud-800 mb-2">Hora</h3>
-            <p className="font-sans text-silver-500">3:00 PM</p>
+            <p className="font-sans text-silver-500">1:00 PM</p>
             <p className="font-sans text-silver-500 text-sm mt-1">Llegar puntual</p>
           </GlassCard>
 
@@ -44,11 +44,18 @@ export function EventDetails() {
               <MapPin size={24} strokeWidth={1.5} />
             </div>
             <h3 className="font-serif text-xl text-cloud-800 mb-2">Lugar</h3>
-            <p className="font-sans text-silver-500">Salón Principal</p>
-            <p className="font-sans text-silver-500 text-sm mt-1 mb-4">Calle 123 # 45-67, Ciudad</p>
-            <Button size="sm" variant="outline" className="w-full text-gold-500 border-gold-300 hover:bg-gold-50">
-              Cómo llegar
-            </Button>
+            <p className="font-sans text-silver-500">Conjunto Residencial La Isla</p>
+            <p className="font-sans text-silver-500 text-sm mt-1 mb-4">Salón Social</p>
+            <a 
+              href="https://www.google.com/maps?sca_esv=630f4fbcc449dd86&rlz=1C5OZZY_enCO1130CO1130&output=search&q=conjunto+residencial+la+isla&source=lnms&fbs=ABfTbFVX0tIkpKPae7RXR9SKovMxO22odM34wfevGG3a5XcKdfI5Ec0jWtT3iZ6F0cnWKaSNWkyKuP0iY1b3g98bGX6ApHULZbpGPMUSZ3t6Pp1zypeiDCHXyazuT6snICQ17wFo2BrrT9THpaQgGAvoHo7paKQ5YqmlFslsoibvdSVptZ6xRcnxeu8KYYBH_rYt8Ao6jrGZtkS9236dJTROej8pJjs5zQ&entry=mc&ved=1t:200715&ictx=111" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="w-full"
+            >
+              <Button size="sm" variant="outline" className="w-full text-gold-500 border-gold-300 hover:bg-gold-50">
+                Cómo llegar
+              </Button>
+            </a>
           </GlassCard>
         </div>
       </div>

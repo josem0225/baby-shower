@@ -1,12 +1,43 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { PawPrint } from 'lucide-react';
 import { useGuest } from './Gatekeeper';
 
 export function HeroSection() {
   const { guestName } = useGuest();
+  const [timeLeft, setTimeLeft] = useState({ days: '00', hours: '00', minutes: '00' });
+
+  useEffect(() => {
+    // Fecha objetivo: 26 de Septiembre 2026 a la 1 PM (hora Colombia)
+    const targetDate = new Date('2026-09-26T13:00:00-05:00').getTime();
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        setTimeLeft({ days: '00', hours: '00', minutes: '00' });
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+      setTimeLeft({
+        days: days.toString().padStart(2, '0'),
+        hours: hours.toString().padStart(2, '0'),
+        minutes: minutes.toString().padStart(2, '0')
+      });
+    };
+
+    updateCountdown(); // Ejecutar inmediatamente
+    const interval = setInterval(updateCountdown, 1000); // Actualizar cada segundo para más precisión
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section className="flex flex-col items-center justify-center text-center px-4 pb-10">
@@ -49,11 +80,11 @@ export function HeroSection() {
         {/* Countdown ultra limpio */}
         <div className="inline-flex py-4">
           <div className="flex gap-8 md:gap-12 justify-center items-center">
-            <CountdownItem value="25" label="Días" />
+            <CountdownItem value={timeLeft.days} label="Días" />
             <span className="text-gold-300/50 text-3xl font-light mb-4">/</span>
-            <CountdownItem value="14" label="Horas" />
+            <CountdownItem value={timeLeft.hours} label="Horas" />
             <span className="text-gold-300/50 text-3xl font-light mb-4">/</span>
-            <CountdownItem value="30" label="Minutos" />
+            <CountdownItem value={timeLeft.minutes} label="Minutos" />
           </div>
         </div>
       </motion.div>
@@ -64,7 +95,7 @@ export function HeroSection() {
 function CountdownItem({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex flex-col items-center">
-      <span className="font-serif text-3xl md:text-5xl text-cloud-800">{value}</span>
+      <span className="font-serif text-3xl md:text-5xl text-cloud-800 w-12 md:w-16">{value}</span>
       <span className="font-sans text-xs md:text-sm text-silver-500 uppercase tracking-widest mt-1">{label}</span>
     </div>
   );

@@ -1,6 +1,7 @@
 import { HeroSection } from "@/components/HeroSection";
 import { EventDetails } from "@/components/EventDetails";
 import { RsvpSection } from "@/components/RsvpSection";
+import { GiftSection } from "@/components/GiftSection";
 import { NameVotingSection } from "@/components/NameVotingSection";
 import { Footer } from "@/components/Footer";
 import { BalloonArch } from "@/components/decorations/BalloonArch";
@@ -34,19 +35,26 @@ export default function Home() {
             <div className="w-24 h-px bg-gradient-to-r from-transparent via-gold-400 to-transparent"></div>
           </div>
 
+          <NameVotingSection />
+
+          <div className="flex justify-center my-16 opacity-50">
+            <div className="w-24 h-px bg-gradient-to-r from-transparent via-gold-400 to-transparent"></div>
+          </div>
+
           <EventDetails />
           
           <div className="flex justify-center my-16 opacity-50">
             <div className="w-24 h-px bg-gradient-to-r from-transparent via-gold-400 to-transparent"></div>
           </div>
 
-          <RsvpSection />
-          
+          <GiftSection />
+
           <div className="flex justify-center my-16 opacity-50">
             <div className="w-24 h-px bg-gradient-to-r from-transparent via-gold-400 to-transparent"></div>
           </div>
 
-          <NameVotingSection />
+          <RsvpSection />
+          
           <Footer />
         </div>
       </div>
