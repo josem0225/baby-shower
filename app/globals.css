@@ -1,26 +1,30 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F2F6FA; /* cloud-50 */
+  --foreground: #3D3831; /* baby-900 */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer utilities {
+  .glass-card {
+    @apply bg-white/60 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl;
+  }
+  .glass-input {
+    @apply bg-white/50 backdrop-blur-sm border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-gold-400 transition-all shadow-sm;
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-gold-600 to-gold-400;
   }
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Patrón de huellitas sutil (Paw print SVG URL encoded) */
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30,35 C25,35 22,30 22,25 C22,20 25,18 30,18 C35,18 38,20 38,25 C38,30 35,35 30,35 Z M20,20 C18,20 15,18 15,15 C15,12 18,10 20,10 C22,10 25,12 25,15 C25,18 22,20 20,20 Z M40,20 C38,20 35,18 35,15 C35,12 38,10 40,10 C42,10 45,12 45,15 C45,18 42,20 40,20 Z M25,45 C20,45 15,40 15,35 C15,30 20,28 25,28 C30,28 35,30 35,35 C35,40 30,45 25,45 Z M45,35 C45,40 40,45 35,45 C30,45 25,40 25,35 C25,30 30,28 35,28 C40,28 45,30 45,35 Z' fill='%23D1D5D8' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
+  background-position: 0 0;
+  background-attachment: fixed;
 }
