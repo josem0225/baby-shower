@@ -2,10 +2,12 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-
 import { PawPrint } from 'lucide-react';
+import { useGuest } from './Gatekeeper';
 
 export function HeroSection() {
+  const { guestName } = useGuest();
+
   return (
     <section className="flex flex-col items-center justify-center text-center px-4 pb-10">
       <motion.div
@@ -14,9 +16,24 @@ export function HeroSection() {
         transition={{ duration: 1, ease: 'easeOut' }}
         className="z-10 max-w-2xl flex flex-col items-center"
       >
-        <div className="text-gold-300/60 mb-6">
+        <div className="text-gold-300/60 mb-4 md:mb-6">
           <PawPrint size={32} strokeWidth={1} />
         </div>
+        
+        {/* Saludo Personalizado */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
+          className="mb-6 md:mb-8"
+        >
+          <h2 className="font-serif italic text-3xl md:text-4xl text-cloud-600 mb-3">
+            {guestName ? `¡Hola ${guestName}!` : '¡Hola!'}
+          </h2>
+          <p className="font-sans text-silver-500 text-sm md:text-base px-6 max-w-md mx-auto leading-relaxed">
+            Eres una persona muy especial para nosotros y nos haría muchísima ilusión que nos acompañes a celebrar nuestro
+          </p>
+        </motion.div>
         
         <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-gold-500 mb-2 leading-tight uppercase tracking-[0.2em] font-medium drop-shadow-sm">
           Baby<br/>Shower

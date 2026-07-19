@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, createContext, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { verifyGuest } from '@/app/actions/auth';
 import { Phone, Loader2, Heart } from 'lucide-react';
@@ -8,20 +8,24 @@ import { FloatingParticles } from './decorations/FloatingParticles';
 import { PomeranianArt } from './decorations/PomeranianArt';
 import { PomeranianSleepingArt } from './decorations/PomeranianSleepingArt';
 
+// 1. Crear un Contexto para compartir el nombre y teléfono sin usar cookies/localStorage
+interface GuestContextType {
+  guestName: string;
+  phone: string;
+}
+const GuestContext = createContext<GuestContextType>({ guestName: '', phone: '' });
+
+export function useGuest() {
+  return useContext(GuestContext);
+}
+
 export function Gatekeeper({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  // Siempre arranca en false, obligando a pedir el número en cada recarga
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [guestName, setGuestName] = useState('');
   const [phone, setPhone] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    const saved = localStorage.getItem('guest_auth');
-    if (saved === 'true') {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,9 +40,8 @@ export function Gatekeeper({ children }: { children: React.ReactNode }) {
     try {
       const result = await verifyGuest(phone);
       if (result.success) {
-        localStorage.setItem('guest_auth', 'true');
         if (result.guestName) {
-          localStorage.setItem('guest_name', result.guestName);
+          setGuestName(result.guestName);
         }
         setIsAuthenticated(true);
       } else {
@@ -51,12 +54,13 @@ export function Gatekeeper({ children }: { children: React.ReactNode }) {
     }
   };
 
-  if (isAuthenticated === null) {
-    return <div className="min-h-screen bg-cloud-50" />;
-  }
-
+  // Si está autenticado, mostramos la invitación envolviendo en el Contexto
   if (isAuthenticated) {
-    return <>{children}</>;
+    return (
+      <GuestContext.Provider value={{ guestName, phone }}>
+        {children}
+      </GuestContext.Provider>
+    );
   }
 
   return (

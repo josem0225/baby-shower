@@ -60,9 +60,15 @@ export async function verifyGuest(phoneNumber: string) {
     }
 
     if (foundGuest) {
-      // Intentar obtener el nombre si existe una columna que se parezca a Nombre o Invitado
-      const nameKey = Object.keys(foundGuest).find(k => k.toLowerCase().includes('nombre') || k.toLowerCase().includes('invitado'));
-      const guestName = nameKey ? foundGuest[nameKey] : 'Invitado VIP';
+      // Por defecto, buscar la columna 'nombre'
+      let nameKey = Object.keys(foundGuest).find(k => k.toLowerCase().includes('nombre') || k.toLowerCase().includes('invitado'));
+      
+      // Si no encuentra la columna por nombre, simplemente toma la segunda columna (que es la Columna B)
+      if (!nameKey && Object.keys(foundGuest).length >= 2) {
+        nameKey = Object.keys(foundGuest)[1]; // [0] es la A, [1] es la B
+      }
+
+      const guestName = nameKey ? foundGuest[nameKey] : 'Invitado Especial';
 
       return { success: true, guestName };
     } else {
