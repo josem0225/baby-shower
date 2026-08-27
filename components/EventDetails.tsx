@@ -44,10 +44,10 @@ export function EventDetails() {
               <MapPin size={24} strokeWidth={1.5} />
             </div>
             <h3 className="font-serif text-xl text-cloud-800 mb-2">Lugar</h3>
-            <p className="font-sans text-silver-500">Conjunto Residencial Torres de Hayuelos</p>
-            <p className="font-sans text-silver-500 text-sm mt-1 mb-4">Cra. 92 #17B-35, Bogotá</p>
+            <p className="font-sans text-silver-500">Hayuelos Reservado</p>
+            <p className="font-sans text-silver-500 text-sm mt-1 mb-4">Dg. 17b #90-53, Fontibón, Bogotá</p>
             <a 
-              href="https://www.google.com/maps/search/?api=1&query=Conjunto+Residencial+Torres+de+Hayuelos+Bogota" 
+              href="https://www.google.com/maps/search/?api=1&query=Hayuelos+Reservado+Bogota" 
               target="_blank" 
               rel="noopener noreferrer"
               className="w-full"
